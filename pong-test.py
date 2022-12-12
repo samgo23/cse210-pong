@@ -1,9 +1,6 @@
 # Import required library
 import turtle
-from constants import *
 
-padheight = stretch_wid=6
-padlength = stretch_len=2
 
 # Create screen
 sc = turtle.Screen()
@@ -11,65 +8,28 @@ sc.title("Pong game")
 sc.bgcolor("white")
 sc.setup(width=1000, height=600)
 
-class Actor:
-    """A thing that participates in the game."""
-    
-    def __init__(self, debug = False):
-        """Constructs a new Actor using the given group and id.
-        
-        Args:
-            group: A string containing the actor's group name.
-            id: A number that uniquely identifies the actor within the group.
-        """
-        self._debug = debug
-        
-    def is_debug(self):
-        """Whether or not the actor is being debugged.
-        
-        Returns:
-            True if the actor is being debugged; False if otherwise.
-        """
-        return self._debug
+
+# Left paddle
+left_pad = turtle.Turtle()
+left_pad.speed(0)
+left_pad.shape("square")
+left_pad.color("black")
+left_pad.shapesize(stretch_wid=6, stretch_len=2)
+left_pad.penup()
+left_pad.goto(-400, 0)
 
 
-
-
-class Paddle(Actor): 
-
-	def __init__(self): 
-		"""
-		
-		"""
-	def draw_paddle(self):
-		
-		self.pad = turtle.Turtle()
-		self.pad.speed(0)
-		self.pad.shape("square")
-		self.pad.color("black")
-		self.pad.shapesize(padheight, padlength)
-		self.pad.penup()
-		left_pad = self.pad.goto(LEFT, 0)
-		right_pad = self.pad.goto(RIGHT, 0)
-		return left_pad, right_pad
-
-
-Paddle.draw_paddle
+# Right paddle
+right_pad = turtle.Turtle()
+right_pad.speed(0)
+right_pad.shape("square")
+right_pad.color("black")
+right_pad.shapesize(stretch_wid=6, stretch_len=2)
+right_pad.penup()
+right_pad.goto(400, 0)
 
 
 # Ball of circle shape
-class Ball(Actor):
-    "A paddle in the game"
-
-    def __init__(self, debug=False):
-        """Constructs a new Ball.
-
-            Args:
-                body: A new instance of Body.
-                image: A new instance of Image.
-                debug: If it is being debugged. 
-        """
-        super().__init__(debug)
-
 hit_ball = turtle.Turtle()
 hit_ball.speed(40)
 hit_ball.shape("circle")
@@ -97,69 +57,32 @@ sketch.write("Left_player : 0 Right_player: 0",
 
 
 # Functions to move paddle vertically
-class MovePaddle:
-
-	def paddleaup(self, side):
-		y = side.pad.ycor()
-		y += 20
-		side.pad.sety(y)
+def paddleaup():
+	y = left_pad.ycor()
+	y += 20
+	left_pad.sety(y)
 
 
-	def paddleadown(self, side):
-		y = side.pad.ycor()
-		y -= 20
-		side.pad.sety(y)
+def paddleadown():
+	y = left_pad.ycor()
+	y -= 20
+	left_pad.sety(y)
 
+
+def paddlebup():
+	y = right_pad.ycor()
+	y += 20
+	right_pad.sety(y)
+
+
+def paddlebdown():
+	y = right_pad.ycor()
+	y -= 20
+	right_pad.sety(y)
 
 
 # Keyboard bindings
-class KeyboardService:
-    """A keyboard service inteface."""
-
-    def is_key_down(self, key):
-        """Detects if the given key is being pressed.
-        
-        Args:
-            key: A string containing the key value, e.g. 'a', '0', etc.
-
-        Returns:
-            True if the key is being pressed; false if otherwise.
-        """
-        raise NotImplementedError("not implemented in base class")
-    
-    def is_key_pressed(self, key):
-        """Detects if the given key was pressed once.
-        
-        Args:
-            key: A string containing the key value, e.g. 'a', '0', etc.
-
-        Returns:
-            True if the key was pressed once; false if otherwise.
-        """
-        raise NotImplementedError("not implemented in base class")
-    
-    def is_key_released(self, key):
-        """Detects if the given key was released once.
-        
-        Args:
-            key: A string containing the key value, e.g. 'a', '0', etc.
-
-        Returns:
-            True if the key was released once; false if otherwise.
-        """
-        raise NotImplementedError("not implemented in base class")
-    
-    def is_key_up(self, key):
-        """Detects if the given key is released.
-        
-        Args:
-            key: A string containing the key value, e.g. 'a', '0', etc.
-
-        Returns:
-            True if the key is released; false if otherwise.
-        """
-        raise NotImplementedError("not implemented in base class")
-
+sc.listen()
 sc.onkeypress(paddleaup, "w")
 sc.onkeypress(paddleadown, "s")
 sc.onkeypress(paddlebup, "Up")
@@ -186,20 +109,22 @@ while True:
 		hit_ball.dy *= -1
 		left_player += 1
 		sketch.clear()
-		sketch.write("Left_player : {} Right_player: {}".format(left_player, right_player), align="center", font=("Courier", 24, "normal"))
+		sketch.write("Left Player : {} Right Player: {}".format(left_player, right_player), align="center", font=("Courier", 24, "normal"))
 
 	if hit_ball.xcor() < -500:
 		hit_ball.goto(0, 0)
 		hit_ball.dy *= -1
 		right_player += 1
 		sketch.clear()
-		sketch.write("Left_player : {} Right_player: {}".format(left_player, right_player), align="center", font=("Courier", 24, "normal"))
+		sketch.write("Left_player : {} Right_player: {}".format(
+								left_player, right_player), align="center",
+								font=("Courier", 24, "normal"))
 
 	# Paddle ball collision
-	if (hit_ball.xcor() > 360 and hit_ball.xcor() < 370) and (hit_ball.ycor() <= right_pad.ycor() + 500 and hit_ball.ycor() >= right_pad.ycor() - padheight):
+	if (hit_ball.xcor() > 360 and hit_ball.xcor() < 370) and (hit_ball.ycor() < right_pad.ycor()+40 and hit_ball.ycor() > right_pad.ycor()-40):
 		hit_ball.setx(360)
 		hit_ball.dx*=-1
 		
-	if (hit_ball.xcor()< -360 and hit_ball.xcor()> -370) and (hit_ball.ycor() <= left_pad.ycor() + 100 and hit_ball.ycor() >= left_pad.ycor() - 100):
+	if (hit_ball.xcor()<-360 and hit_ball.xcor()>-370) and (hit_ball.ycor()<left_pad.ycor()+40 and hit_ball.ycor()>left_pad.ycor()-40):
 		hit_ball.setx(-360)
 		hit_ball.dx*=-1
