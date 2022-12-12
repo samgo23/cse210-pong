@@ -3,7 +3,7 @@ from game.casting.paddle import Paddle
 from game.services.screen import Screen
 from game.casting.ball import Ball
 from game.services.score import Score
-from game.script.move_paddle import MovePaddle
+#from game.script.move_paddle import MovePaddle
 from constants import *
 
 class Director:
@@ -17,7 +17,6 @@ class Director:
         self.right_player = ''
         self.sketch = ''
 
-        self._move_paddle = MovePaddle()
 
     def start_game(self):
         """
@@ -30,14 +29,39 @@ class Director:
 
     def get_inputs(self):
         """
-        
+        Get game inputs.
         """
         
+        def paddleaup():
+            y = self.left_pad.ycor()
+            y += 20
+            self.left_pad.sety(y)
+
+
+        def paddleadown():
+            y = self.left_pad.ycor()
+            y -= 20
+            self.left_pad.sety(y)
+
+
+        def paddlebup():
+            y = self.right_pad.ycor()
+            y += 20
+            self.right_pad.sety(y)
+
+
+        def paddlebdown():
+            y = self.right_pad.ycor()
+            y -= 20
+            self.right_pad.sety(y)
+
+
+        # Keyboard bindings
         self.sc.listen()
-        self.sc.onkeypress(self._move_paddle.paddleaup, "w")
-        self.sc.onkeypress(self._move_paddle.paddleadown, "s")
-        self.sc.onkeypress(self._move_paddle.paddlebup, "Up")
-        self.sc.onkeypress(self._move_paddle.paddlebdown, "Down")
+        self.sc.onkeypress(paddleaup, "w")
+        self.sc.onkeypress(paddleadown, "s")
+        self.sc.onkeypress(paddlebup, "Up")
+        self.sc.onkeypress(paddlebdown, "Down")
 
         self.left_pad = Paddle.build_paddle(left, left)
         self.right_pad = Paddle.build_paddle(right, right) 
@@ -51,7 +75,7 @@ class Director:
 
     def do_updates(self):
         """
-        
+        Updates the game.
         """
         while True:
             self.sc.update()
