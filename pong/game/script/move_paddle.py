@@ -10,34 +10,38 @@ class MovePaddle(Paddle):
     """
     def __init__(self):
         super().__init__()
-
+        self.y = 0
         self.left_pad = 0
         self.right_pad = 0
          
 
     def paddleaup(self):
-        y = self.left_pad.ycor()
-        y += 20
-        self.left_pad.sety(y)
+        self.y = self.left_pad.ycor()
+        self.y += 20
+        self.left_pad.sety(self.y)
+        print('yes')
         return self.left_pad
 
 
     def paddleadown(self):
-        y = self.left_pad.ycor()
-        y -= 20
-        self.left_pad.sety(y)
+        self.y = self.left_pad.ycor()
+        self.y -= 20
+        self.left_pad.sety(self.y)
+        print('yes')
         return self.left_pad
 
 
     def paddlebup(self):
-        y = self.right_pad.ycor()
-        y += 20
-        self.right_pad.sety(y)
+        self.y = self.right_pad.ycor()
+        self.y += 20
+        self.right_pad.sety(self.y)
+        print('yes')
         return self.right_pad
 
 
     def paddlebdown(self):
-        y = self.right_pad.ycor()
-        y -= 20
-        self.right_pad.sety(y)
+        self.y = self.right_pad.ycor()
+        self.y -= 20
+        self.right_pad.sety(self.y)
+        print('yes')
         return self.right_pad

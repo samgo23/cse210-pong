@@ -9,7 +9,7 @@ from constants import *
 class Director:
     
     def __init__(self):
-        self.sc = ''
+        self.sc = Screen.create_screen()
         self.left_pad = ''
         self.right_pad = ''
         self.hit_ball = ''
@@ -17,14 +17,16 @@ class Director:
         self.right_player = ''
         self.sketch = ''
 
+        self._move_paddle = MovePaddle()
+
     def start_game(self):
         """
         Starts a new game.
         """
-        sc = Screen.create_screen()
+        
         while True:
-            Director.get_inputs()
-            Director.do_updates()
+            self.get_inputs()
+            self.do_updates()
 
     def get_inputs(self):
         """
@@ -32,10 +34,10 @@ class Director:
         """
         
         self.sc.listen()
-        self.sc.onkeypress(MovePaddle.paddleaup, "w")
-        self.sc.onkeypress(MovePaddle.paddleadown, "s")
-        self.sc.onkeypress(MovePaddle.paddlebup, "Up")
-        self.sc.onkeypress(MovePaddle.paddlebdown, "Down")
+        self.sc.onkeypress(self._move_paddle.paddleaup, "w")
+        self.sc.onkeypress(self._move_paddle.paddleadown, "s")
+        self.sc.onkeypress(self._move_paddle.paddlebup, "Up")
+        self.sc.onkeypress(self._move_paddle.paddlebdown, "Down")
 
         self.left_pad = Paddle.build_paddle(left, left)
         self.right_pad = Paddle.build_paddle(right, right) 
@@ -69,18 +71,16 @@ class Director:
             if self.hit_ball.xcor() > 500:
                 self.hit_ball.goto(0, 0)
                 self.hit_ball.dy *= -1
-                left_player += 1
+                self.left_player += 1
                 self.sketch.clear()
-                self.sketch.write("Left Player : {} Right Player: {}".format(left_player, right_player), align="center", font=("Courier", 24, "normal"))
+                self.sketch.write("Left Player : {} Right Player: {}".format(self.left_player, self.right_player), align="center", font=("Courier", 24, "normal"))
 
             if self.hit_ball.xcor() < -500:
                 self.hit_ball.goto(0, 0)
                 self.hit_ball.dy *= -1
-                right_player += 1
+                self.right_player += 1
                 self.sketch.clear()
-                self.sketch.write("Left Player : {} Right Player: {}".format(
-                                        left_player, right_player), align="center",
-                                        font=("Courier", 24, "normal"))
+                self.sketch.write("Left Player : {} Right Player: {}".format(self.left_player, self.right_player), align="center", font=("Courier", 24, "normal"))
 
             # Paddle ball collision
             if (self.hit_ball.xcor() > 360 and self.hit_ball.xcor() < 370) and (self.hit_ball.ycor() < self.right_pad.ycor() + COLLISION_AREA and self.hit_ball.ycor() > self.right_pad.ycor() - COLLISION_AREA):
