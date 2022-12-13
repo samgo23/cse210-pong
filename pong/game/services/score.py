@@ -7,13 +7,13 @@ class Score:
         pass
 
     def player_score(player):
-
-        # Initialize the score
+        """Initialize the score"""
         player = 0
         return player 
 
     def display_score():
         """
+        Displays score on to the screen.
         """
         # Displays the score
         sketch = turtle.Turtle()
